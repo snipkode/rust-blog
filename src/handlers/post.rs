@@ -40,14 +40,17 @@ pub async fn view_post(
     State(state): State<AppState>,
     Path(id): Path<i32>,
 ) -> impl IntoResponse {
-    let post = Post::find_by_id(id).one(&state.conn).await.unwrap().unwrap();
+    let post = match Post::find_by_id(id).one(&state.conn).await.unwrap() {
+        Some(p) => p,
+        None => return Redirect::to("/").into_response(),
+    };
 
     let mut ctx = Context::new();
     ctx.insert("post", &post);
     ctx.insert("user", &user);
 
     let rendered = state.templates.render("post.html", &ctx).unwrap();
-    Html(rendered)
+    Html(rendered).into_response()
 }
 
 pub async fn new_post_form(
@@ -82,14 +85,17 @@ pub async fn edit_post_form(
     State(state): State<AppState>,
     Path(id): Path<i32>,
 ) -> impl IntoResponse {
-    let post = Post::find_by_id(id).one(&state.conn).await.unwrap().unwrap();
+    let post = match Post::find_by_id(id).one(&state.conn).await.unwrap() {
+        Some(p) => p,
+        None => return Redirect::to("/").into_response(),
+    };
 
     let mut ctx = Context::new();
     ctx.insert("post", &post);
     ctx.insert("user", &_claims);
 
     let rendered = state.templates.render("edit.html", &ctx).unwrap();
-    Html(rendered)
+    Html(rendered).into_response()
 }
 
 pub async fn update_post(
@@ -98,7 +104,10 @@ pub async fn update_post(
     Path(id): Path<i32>,
     Form(form): Form<CreatePost>,
 ) -> impl IntoResponse {
-    let post = Post::find_by_id(id).one(&state.conn).await.unwrap().unwrap();
+    let post = match Post::find_by_id(id).one(&state.conn).await.unwrap() {
+        Some(p) => p,
+        None => return Redirect::to("/").into_response(),
+    };
     let mut post: post::ActiveModel = post.into();
 
     post.title = Set(form.title);
@@ -107,7 +116,7 @@ pub async fn update_post(
 
     post.update(&state.conn).await.unwrap();
 
-    Redirect::to(&format!("/post/{}", id))
+    Redirect::to(&format!("/post/{}", id)).into_response()
 }
 
 pub async fn delete_post(
