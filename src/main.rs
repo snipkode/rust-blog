@@ -6,8 +6,9 @@ use axum_extra::extract::cookie::Key;
 use dotenvy::dotenv;
 use migration::{Migrator, MigratorTrait};
 use rust_blog::{app_state::AppState, handlers::post as post_handlers, handlers::auth as auth_handlers};
-use sea_orm::Database;
+use sea_orm::{ConnectOptions, Database};
 use std::env;
+use std::time::Duration;
 use tera::Tera;
 use tower_http::services::ServeDir;
 
@@ -21,8 +22,17 @@ async fn main() {
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
     let cookie_secret = env::var("COOKIE_SECRET").expect("COOKIE_SECRET must be set");
 
-    // Connect to database
-    let conn = Database::connect(&db_url).await.expect("Failed to connect to database");
+    // Connect to database with options
+    let mut opt = ConnectOptions::new(db_url);
+    opt.max_connections(10)
+       .min_connections(2)
+       .connect_timeout(Duration::from_secs(10))
+       .acquire_timeout(Duration::from_secs(10))
+       .idle_timeout(Duration::from_secs(10))
+       .max_lifetime(Duration::from_secs(10))
+       .sqlx_logging(true);
+
+    let conn = Database::connect(opt).await.expect("Failed to connect to database");
 
     // Run migrations
     Migrator::up(&conn, None).await.expect("Failed to run migrations");
