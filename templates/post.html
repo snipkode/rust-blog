@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - Mini Blog{% endblock %}
+
+{% block content %}
+<article class="post-detail">
+    <header class="post-header">
+        <h1>{{ post.title }}</h1>
+        <div class="post-meta">
+            <span>Posted on {{ post.created_at | date(format="%b %d, %Y") }}</span>
+            {% if post.updated_at != post.created_at %}
+            <span> • Updated on {{ post.updated_at | date(format="%b %d, %Y") }}</span>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="post-content">
+        {{ post.content | linebreaksbr | safe }}
+    </div>
+
+    <footer class="post-actions">
+        <a href="/post/{{ post.id }}/edit" class="btn btn-edit">Edit Post</a>
+        <form action="/post/{{ post.id }}/delete" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+            <button type="submit" class="btn btn-delete">Delete Post</button>
+        </form>
+        <a href="/" class="btn btn-back">Back to Home</a>
+    </footer>
+</article>
+{% endblock %}

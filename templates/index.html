@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Mini Blog{% endblock %}
+
+{% block content %}
+<h1>Recent Posts</h1>
+<div class="posts-grid">
+    {% for post in posts %}
+    <article class="post-card">
+        <h2><a href="/post/{{ post.id }}">{{ post.title }}</a></h2>
+        <p class="post-meta">Posted on {{ post.created_at | date(format="%b %d, %Y") }}</p>
+        <p class="post-excerpt">{{ post.content | truncate(length=150) }}</p>
+        <a href="/post/{{ post.id }}" class="read-more">Read More &rarr;</a>
+    </article>
+    {% else %}
+    <p>No posts found. <a href="/post/new">Create one!</a></p>
+    {% endfor %}
+</div>
+{% endblock %}

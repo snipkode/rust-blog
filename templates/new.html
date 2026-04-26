@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}New Post - Mini Blog{% endblock %}
+
+{% block content %}
+<section class="form-container">
+    <h1>Create New Post</h1>
+    <form action="/post/new" method="POST" class="post-form">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required placeholder="Enter post title">
+        </div>
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea id="content" name="content" rows="10" required placeholder="Write your content here..."></textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Publish Post</button>
+            <a href="/" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
