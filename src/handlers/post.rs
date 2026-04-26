@@ -15,7 +15,12 @@ pub struct CreatePost {
     pub content: String,
 }
 
-pub async fn list_posts(State(state): State<AppState>) -> impl IntoResponse {
+use crate::handlers::auth::{Claims, UserContext};
+
+pub async fn list_posts(
+    UserContext(user): UserContext,
+    State(state): State<AppState>,
+) -> impl IntoResponse {
     let posts = Post::find()
         .order_by(post::Column::CreatedAt, Order::Desc)
         .all(&state.conn)
@@ -24,12 +29,14 @@ pub async fn list_posts(State(state): State<AppState>) -> impl IntoResponse {
 
     let mut ctx = Context::new();
     ctx.insert("posts", &posts);
+    ctx.insert("user", &user);
 
     let rendered = state.templates.render("index.html", &ctx).unwrap();
     Html(rendered)
 }
 
 pub async fn view_post(
+    UserContext(user): UserContext,
     State(state): State<AppState>,
     Path(id): Path<i32>,
 ) -> impl IntoResponse {
@@ -37,18 +44,20 @@ pub async fn view_post(
 
     let mut ctx = Context::new();
     ctx.insert("post", &post);
+    ctx.insert("user", &user);
 
     let rendered = state.templates.render("post.html", &ctx).unwrap();
     Html(rendered)
 }
 
-use crate::handlers::auth::Claims;
-
 pub async fn new_post_form(
     _claims: Claims,
     State(state): State<AppState>,
 ) -> impl IntoResponse {
-    let rendered = state.templates.render("new.html", &Context::new()).unwrap();
+    let mut ctx = Context::new();
+    ctx.insert("user", &_claims);
+    
+    let rendered = state.templates.render("new.html", &ctx).unwrap();
     Html(rendered)
 }
 
@@ -77,6 +86,7 @@ pub async fn edit_post_form(
 
     let mut ctx = Context::new();
     ctx.insert("post", &post);
+    ctx.insert("user", &_claims);
 
     let rendered = state.templates.render("edit.html", &ctx).unwrap();
     Html(rendered)

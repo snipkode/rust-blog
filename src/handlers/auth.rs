@@ -19,25 +19,27 @@ pub struct AuthForm {
     pub username: String,
     pub password: String,
 }
-
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Claims {
     pub sub: String,
     pub exp: usize,
 }
 
+pub struct UserContext(pub Option<Claims>);
+
+#[async_trait]
 impl FromRequestParts<AppState> for Claims {
     type Rejection = Redirect;
 
     async fn from_request_parts(parts: &mut Parts, _state: &AppState) -> Result<Self, Self::Rejection> {
         let jar = CookieJar::from_headers(&parts.headers);
-        
+
         let token = jar.get("jwt")
             .map(|c| c.value().to_string())
             .ok_or_else(|| Redirect::to("/login"))?;
 
         let secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
-        
+
         decode::<Claims>(
             &token,
             &DecodingKey::from_secret(secret.as_ref()),
@@ -47,6 +49,33 @@ impl FromRequestParts<AppState> for Claims {
         .map_err(|_| Redirect::to("/login"))
     }
 }
+
+#[async_trait]
+impl FromRequestParts<AppState> for UserContext {
+    type Rejection = std::convert::Infallible;
+
+    async fn from_request_parts(parts: &mut Parts, _state: &AppState) -> Result<Self, Self::Rejection> {
+        let jar = CookieJar::from_headers(&parts.headers);
+
+        let token = match jar.get("jwt") {
+            Some(c) => c.value().to_string(),
+            None => return Ok(UserContext(None)),
+        };
+
+        let secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+
+        let claims = decode::<Claims>(
+            &token,
+            &DecodingKey::from_secret(secret.as_ref()),
+            &Validation::default(),
+        )
+        .map(|data| data.claims)
+        .ok();
+
+        Ok(UserContext(claims))
+    }
+}
+
 
 pub async fn register_form(State(state): State<AppState>) -> impl IntoResponse {
     let rendered = state.templates.render("register.html", &Context::new()).unwrap();
