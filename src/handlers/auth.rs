@@ -1,4 +1,3 @@
-use async_trait::async_trait;
 use axum::{
     extract::{State, FromRequestParts},
     response::{Html, IntoResponse, Redirect},
