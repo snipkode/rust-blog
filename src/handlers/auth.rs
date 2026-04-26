@@ -28,7 +28,6 @@ pub struct Claims {
 
 pub struct UserContext(pub Option<Claims>);
 
-#[async_trait]
 impl FromRequestParts<AppState> for Claims {
     type Rejection = Redirect;
 
@@ -51,7 +50,6 @@ impl FromRequestParts<AppState> for Claims {
     }
 }
 
-#[async_trait]
 impl FromRequestParts<AppState> for UserContext {
     type Rejection = std::convert::Infallible;
 
@@ -76,7 +74,6 @@ impl FromRequestParts<AppState> for UserContext {
         Ok(UserContext(claims))
     }
 }
-
 
 pub async fn register_form(State(state): State<AppState>) -> impl IntoResponse {
     let rendered = state.templates.render("register.html", &Context::new()).unwrap();
