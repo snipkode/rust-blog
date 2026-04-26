@@ -1,29 +1,68 @@
 {% extends "base.html" %}
 
-{% block title %}{{ post.title }} - Mini Blog{% endblock %}
+{% block title %}{{ post.title }} - BlogRust{% endblock %}
 
 {% block content %}
-<article class="post-detail">
-    <header class="post-header">
-        <h1>{{ post.title }}</h1>
-        <div class="post-meta">
-            <span>Posted on {{ post.created_at | date(format="%b %d, %Y") }}</span>
-            {% if post.updated_at != post.created_at %}
-            <span> • Updated on {{ post.updated_at | date(format="%b %d, %Y") }}</span>
-            {% endif %}
+<div class="max-w-3xl mx-auto">
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="/" class="text-sm font-medium text-slate-500 hover:text-indigo-600 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    Beranda
+                </a>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-slate-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                    <span class="ml-1 text-sm font-medium text-slate-400 truncate max-w-[150px] sm:max-w-xs">Postingan</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <article class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+        <header class="p-6 sm:p-10 border-b border-slate-100 bg-slate-50/50">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight">{{ post.title }}</h1>
+            <div class="flex flex-wrap items-center gap-4 mt-6 text-sm text-slate-500">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xs uppercase">
+                        {{ post.id }}
+                    </div>
+                    <span class="font-semibold text-slate-700">Admin</span>
+                </div>
+                <span class="text-slate-300">|</span>
+                <time datetime="{{ post.created_at }}">Dipublikasikan: {{ post.created_at | date(format="%b %d, %Y") }}</time>
+                {% if post.updated_at != post.created_at %}
+                <span class="text-slate-300">•</span>
+                <span class="italic text-xs text-slate-400">Diperbarui: {{ post.updated_at | date(format="%b %d, %Y") }}</span>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="p-6 sm:p-10 prose prose-slate prose-indigo max-w-none prose-p:leading-relaxed prose-p:text-slate-600 prose-headings:text-slate-900">
+            {{ post.content | linebreaksbr | safe }}
         </div>
-    </header>
 
-    <div class="post-content">
-        {{ post.content | linebreaksbr | safe }}
-    </div>
-
-    <footer class="post-actions">
-        <a href="/post/{{ post.id }}/edit" class="btn btn-edit">Edit Post</a>
-        <form action="/post/{{ post.id }}/delete" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
-            <button type="submit" class="btn btn-delete">Delete Post</button>
-        </form>
-        <a href="/" class="btn btn-back">Back to Home</a>
-    </footer>
-</article>
+        <footer class="px-6 py-6 sm:px-10 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <a href="/post/{{ post.id }}/edit" class="btn btn-secondary text-sm h-10 px-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Edit
+                </a>
+                <form action="/post/{{ post.id }}/delete" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus postingan ini?');">
+                    <button type="submit" class="btn btn-danger text-sm h-10 px-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Hapus
+                    </button>
+                </form>
+            </div>
+            <a href="/" class="text-indigo-600 font-bold text-sm hover:underline">&larr; Kembali ke Beranda</a>
+        </footer>
+    </article>
+</div>
 {% endblock %}

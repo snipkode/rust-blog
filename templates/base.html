@@ -1,34 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Mini Blog{% endblock %}</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>{% block title %}Blog Rust{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        @layer base {
+            h1 { @apply text-2xl font-bold text-slate-900 leading-tight mb-4; }
+            h2 { @apply text-xl font-bold text-slate-800 mb-3; }
+            .btn { @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2; }
+            .btn-primary { @apply bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 shadow-sm hover:shadow-md; }
+            .btn-secondary { @apply bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 focus:ring-slate-300; }
+            .btn-danger { @apply bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 focus:ring-red-500; }
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <nav>
-            <div class="container">
-                <a href="/" class="logo">Mini Blog</a>
-                <ul class="nav-links">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/post/new">New Post</a></li>
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Register</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                </ul>
+<body class="h-full text-slate-600 antialiased flex flex-col">
+    <header class="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <nav class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-14 items-center justify-between">
+                <div class="flex items-center gap-6">
+                    <a href="/" class="flex items-center gap-2 group">
+                        <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center group-hover:rotate-6 transition-transform">
+                            <span class="text-white font-bold text-lg">R</span>
+                        </div>
+                        <span class="text-slate-900 font-bold tracking-tight text-lg">BlogRust</span>
+                    </a>
+                    <div class="hidden sm:flex sm:items-center sm:gap-4">
+                        <a href="/" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Beranda</a>
+                        <a href="/post/new" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">Tulis</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="/login" class="text-sm font-medium text-slate-600 hover:text-indigo-600 px-3 py-2 transition-colors">Masuk</a>
+                    <a href="/register" class="btn btn-primary text-xs h-9">Daftar</a>
+                    <a href="/logout" class="text-slate-400 hover:text-red-600 p-2 transition-colors" title="Keluar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </a>
+                </div>
             </div>
         </nav>
     </header>
 
-    <main class="container">
+    <main class="flex-grow mx-auto max-w-5xl w-full px-4 sm:px-6 lg:px-8 py-8">
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Mini Blog built with Rust & SeaORM</p>
+    <footer class="bg-white border-t border-slate-200 py-8">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-400">
+            <p>&copy; 2026 BlogRust. Dibuat dengan Rust & Axum.</p>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-slate-600">Github</a>
+                <a href="#" class="hover:text-slate-600">Twitter</a>
+            </div>
         </div>
     </footer>
 </body>
