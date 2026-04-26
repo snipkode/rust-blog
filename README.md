@@ -1,80 +1,80 @@
-# Rust Mini Blog
+# Blog Mini Rust
 
-A fullstack mini-blog application built with **Rust**, **Axum**, **SeaORM**, and **MySQL**. This project features a robust backend with JWT authentication and server-side rendering using **Tera** templates.
+Aplikasi blog mini fullstack yang dibuat menggunakan **Rust**, **Axum**, **SeaORM**, dan **MySQL**. Proyek ini memiliki backend yang tangguh dengan autentikasi JWT dan rendering sisi server menggunakan template **Tera**.
 
-## 🚀 Features
+## Fitur
 
-- **Full CRUD Operations:** Create, Read, Update, and Delete blog posts.
-- **JWT Authentication:** Secure user registration and login system using JSON Web Tokens stored in `HttpOnly` cookies.
-- **Password Hashing:** Secure password storage using `bcrypt`.
-- **Database Migrations:** Automatic database schema management with SeaORM migrations.
-- **Modern UI:** Clean and responsive design built with Vanilla CSS.
-- **Asynchronous Core:** Powered by `Tokio` for high-performance async execution.
+- **Operasi CRUD Lengkap:** Membuat, Membaca, Memperbarui, dan Menghapus postingan blog.
+- **Autentikasi JWT:** Sistem registrasi dan login pengguna yang aman menggunakan JSON Web Tokens yang disimpan di dalam cookie `HttpOnly`.
+- **Hashing Password:** Penyimpanan password yang aman menggunakan `bcrypt`.
+- **Migrasi Database:** Manajemen skema database otomatis dengan migrasi SeaORM.
+- **Antarmuka Modern:** Desain bersih dan responsif yang dibuat dengan Vanilla CSS.
+- **Inti Asinkron:** Menggunakan `Tokio` untuk eksekusi asinkron berperforma tinggi.
 
-## 🛠️ Tech Stack
+## Teknologi Utama
 
 - **Backend:** [Axum](https://github.com/tokio-rs/axum)
-- **Database ORM:** [SeaORM](https://www.sea-ql.org/SeaORM/)
+- **ORM Database:** [SeaORM](https://www.sea-ql.org/SeaORM/)
 - **Database:** MySQL
 - **Templating:** [Tera](https://tera.netlify.app/)
-- **Authentication:** `jsonwebtoken` & `bcrypt`
+- **Autentikasi:** `jsonwebtoken` & `bcrypt`
 
-## 📋 Prerequisites
+## Prasyarat
 
-- [Rust](https://www.rust-lang.org/tools/install) (latest stable)
-- [MySQL](https://www.mysql.com/) server running
-- [GitHub CLI](https://cli.github.com/) (optional, for repository management)
+- [Rust](https://www.rust-lang.org/tools/install) (versi stabil terbaru)
+- Server [MySQL](https://www.mysql.com/) yang sedang berjalan
+- [GitHub CLI](https://cli.github.com/) (opsional, untuk manajemen repositori)
 
-## ⚙️ Setup & Installation
+## Persiapan & Instalasi
 
-1. **Clone the repository:**
+1. **Clone repositori:**
    ```bash
    git clone https://github.com/snipkode/rust-blog.git
    cd rust-blog
    ```
 
-2. **Configure Environment Variables:**
-   Create a `.env` file in the root directory (or edit the existing one):
+2. **Konfigurasi Variabel Lingkungan:**
+   Buat file `.env` di direktori root (atau edit yang sudah ada):
    ```env
    DATABASE_URL=mysql://username:password@localhost:3306/rust_blog
    HOST=127.0.0.1
    PORT=3000
-   JWT_SECRET=your-super-secret-jwt-key
-   COOKIE_SECRET=your-at-least-64-character-long-cookie-secret
+   JWT_SECRET=kunci-jwt-rahasia-anda
+   COOKIE_SECRET=rahasia-cookie-minimal-64-karakter
    ```
 
-3. **Database Setup:**
-   Ensure your MySQL server is running and create the database:
+3. **Pengaturan Database:**
+   Pastikan server MySQL Anda berjalan dan buat database baru:
    ```sql
    CREATE DATABASE rust_blog;
    ```
 
-4. **Run the Application:**
+4. **Jalankan Aplikasi:**
    ```bash
    cargo run
    ```
-   The application will automatically run migrations and start the server at `http://127.0.0.1:3000`.
+   Aplikasi akan menjalankan migrasi secara otomatis dan memulai server di `http://127.0.0.1:3000`.
 
-## 📂 Project Structure
+## Struktur Proyek
 
-- `src/`: Main application logic.
-    - `handlers/`: Route handlers for auth and blog posts.
-    - `entities/`: SeaORM database models.
-    - `app_state.rs`: Shared application state.
-- `migration/`: Database migration scripts.
-- `templates/`: HTML templates (Tera).
-- `static/`: Static assets (CSS).
+- `src/`: Logika utama aplikasi.
+    - `handlers/`: Handler rute untuk autentikasi dan postingan blog.
+    - `entities/`: Model database SeaORM.
+    - `app_state.rs`: State aplikasi yang digunakan bersama.
+- `migration/`: Skrip migrasi database.
+- `templates/`: Template HTML (Tera).
+- `static/`: Aset statis (CSS).
 
-## 🛡️ Authentication Flow
+## Alur Autentikasi
 
-1. **Register:** Create a new account at `/register`.
-2. **Login:** Authenticate at `/login`. A JWT is generated and stored in a secure cookie.
-3. **Authorized Access:** Routes like `/post/new`, `/post/:id/edit`, and `/post/:id/delete` are protected and require a valid JWT.
-4. **Logout:** Clear the session at `/logout`.
+1. **Daftar:** Buat akun baru di `/register`.
+2. **Login:** Masuk di `/login`. JWT akan dibuat dan disimpan dalam cookie yang aman.
+3. **Akses Terproteksi:** Rute seperti `/post/new`, `/post/:id/edit`, dan `/post/:id/delete` diproteksi dan memerlukan JWT yang valid.
+4. **Logout:** Hapus sesi melalui `/logout`.
 
-## 📜 License
+## Lisensi
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Didistribusikan di bawah Lisensi MIT. Lihat `LICENSE` untuk informasi lebih lanjut.
 
 ---
-Built with ❤️ using Rust.
+Dibuat menggunakan Rust.
