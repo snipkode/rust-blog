@@ -4,7 +4,6 @@ use axum::{
     Form,
     http::request::Parts,
 };
-use async_trait::async_trait;
 use axum_extra::extract::cookie::{Cookie, CookieJar};
 use sea_orm::{ActiveModelTrait, EntityTrait, Set, ColumnTrait, QueryFilter};
 use serde::{Deserialize, Serialize};
